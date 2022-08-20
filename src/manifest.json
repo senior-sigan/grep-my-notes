@@ -1,0 +1,29 @@
+{
+  "name": "Grep My Notes!",
+  "version": "1.0.0",
+  "description": "Chrome extension to search in obsidian while searching on google",
+  "author": "Ilya Siganov",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/img/icon-16.png",
+      "24": "assets/img/icon-24.png",
+      "32": "assets/img/icon-32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_idle",
+      "matches": ["https://*.google.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["searchResults.html", "searchResults.js", "searchResults.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "permissions": ["tabs", "activeTab"]
+}

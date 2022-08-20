@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": "airbnb-base",
+  "env": {
+    "webextensions": true,
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "script"
+  }
+}
