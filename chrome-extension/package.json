@@ -1,5 +1,5 @@
 {
-  "name": "Grep My Notes!",
+  "name": "grep_my_notes",
   "version": "0.0.1",
   "description": "Chrome extension to search in obsidian while searching in google",
   "repository": "",

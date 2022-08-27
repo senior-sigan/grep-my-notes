@@ -7,6 +7,41 @@
     </a>`;
   }
 
+  async function renderResults(results) {
+    const notesBlock = document.getElementById('notesCards');
+    notesBlock.innerHTML = '';
+
+    const data = await results.json();
+    if (!data || !data.entries) {
+      return;
+    }
+
+    data.entries.forEach((entry) => {
+      notesBlock.insertAdjacentHTML(
+        'afterbegin',
+        noteBlock({
+          link: '',
+          date: entry.date,
+          title: entry.title,
+          snippet: entry.slug || '',
+        }),
+      );
+    });
+  }
+
+  function renderError(error) {
+    const notesBlock = document.getElementById('notesCards');
+    notesBlock.insertAdjacentHTML(
+      'afterbegin',
+      noteBlock({
+        link: '',
+        date: '',
+        title: 'ERROR',
+        snippet: error,
+      }),
+    );
+  }
+
   async function getSearchQuery() {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     const url = new URL(tabs[0].url);
@@ -16,34 +51,10 @@
   }
 
   const q = await getSearchQuery();
-  console.log(q);
-
-  const notesBlock = document.getElementById('notesCards');
-  notesBlock.insertAdjacentHTML(
-    'afterbegin',
-    noteBlock({
-      link: '',
-      date: '2022-08-20',
-      title: 'Example',
-      snippet: 'Some text is hehe',
-    }),
-  );
-  notesBlock.insertAdjacentHTML(
-    'afterbegin',
-    noteBlock({
-      link: '',
-      date: '2022-08-20',
-      title: 'Example',
-      snippet: 'Some text is hehe',
-    }),
-  );
-  notesBlock.insertAdjacentHTML(
-    'afterbegin',
-    noteBlock({
-      link: '',
-      date: '2022-08-20',
-      title: 'Example',
-      snippet: 'Some text is hehe',
-    }),
-  );
+  try {
+    const result = await fetch(`http://localhost:3000/?query=${q}`);
+    renderResults(result);
+  } catch (err) {
+    renderError(err);
+  }
 })();

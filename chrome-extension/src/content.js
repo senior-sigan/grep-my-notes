@@ -15,7 +15,9 @@
 
   function createResultsBlock() {
     const frame = document.createElement('iframe');
-    frame.style = 'width: 454px; height: 265px; border: none;';
+    // TODO: calculate height!
+    // TODO: fix width, horyzontal scroll on google page
+    frame.style = 'width: 454px; height: 450px; border: none;';
     frame.src = chrome.runtime.getURL('searchResults.html');
     return frame;
   }
