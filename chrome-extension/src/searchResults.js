@@ -22,7 +22,7 @@
 
     data.entries.forEach((entry) => {
       notesBlock.insertAdjacentHTML(
-        'afterbegin',
+        'beforeend',
         noteBlock({
           link: `vscode://file${entry.file}`,
           title: entry.title,
