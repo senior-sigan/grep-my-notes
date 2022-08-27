@@ -16,6 +16,7 @@ type Entry struct {
 	File  string `json:"file"`
 	Count int    `json:"count"`
 	Slug  string `json:"slug"`
+	Title string `json:"title"`
 }
 
 func IntMin(a, b int) int {
@@ -61,15 +62,41 @@ func ReadText(file string) (string, error) {
 	return text, nil
 }
 
+func dropFrontmater(text string) string {
+	lines := strings.Split(text, "\n")
+	if len(lines) == 0 {
+		return ""
+	}
+
+	i := 0
+	if lines[i] == "---" {
+		for i = 1; i < len(lines); i++ {
+			if lines[i] == "---" {
+				break
+			}
+		}
+	}
+
+	text = strings.Join(lines[i+1:], "\n")
+	return text
+}
+
 func extractSlug(file string) string {
 	text, err := ReadText(file)
 	if err != nil {
 		log.Printf("[ERROR] extractSlug fail for %s: %v", file, err)
 		return ""
 	}
-	runs := []rune(text)
 
+	text = dropFrontmater(text)
+
+	runs := []rune(text)
 	return string(runs[0:IntMin(240, len(runs))])
+}
+
+func extractTitle(file string) string {
+	baseName := filepath.Base(file)
+	return strings.TrimSuffix(baseName, filepath.Ext(baseName))
 }
 
 func (s *Searcher) Find(query string, limit int) []Entry {
@@ -117,6 +144,7 @@ func (s *Searcher) Find(query string, limit int) []Entry {
 
 		results[i] = tuples[i]
 		results[i].Slug = extractSlug(tuples[i].File)
+		results[i].Title = extractTitle(tuples[i].File)
 	}
 
 	return results

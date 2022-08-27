@@ -2,9 +2,13 @@
   function noteBlock(note) {
     return `<a class="noteCard" target="_blank" href="${note.link}">
       <h1 class="noteCardTitle">${note.title}</h1>
-      <p class="noteCardDate">${note.date}</p>
       <p class="noteCardSnippet">${note.snippet}</p>
     </a>`;
+  }
+
+  function asHtml(text) {
+    const lines = text.split('\n').filter((el) => el !== '');
+    return lines.join('<br>');
   }
 
   async function renderResults(results) {
@@ -20,10 +24,9 @@
       notesBlock.insertAdjacentHTML(
         'afterbegin',
         noteBlock({
-          link: '',
-          date: entry.date,
+          link: `vscode://file${entry.file}`,
           title: entry.title,
-          snippet: entry.slug || '',
+          snippet: asHtml(entry.slug || ''),
         }),
       );
     });
