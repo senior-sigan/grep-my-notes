@@ -1,24 +1,30 @@
-(() => {
-  function getGoogleQuery() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('q');
-  }
-
-  function app() {
-    let rightBlock = document.getElementById('rhs');
-    if (!rightBlock) {
-      const searchPage = document.getElementById('rcnt');
-      rightBlock = document.createElement('div');
-      rightBlock.id = 'rhs';
-      rightBlock.role = 'complementary';
-      searchPage.append(rightBlock);
+(async () => {
+  function findOrCreateBlock() {
+    const rightBlock = document.getElementById('rhs');
+    if (rightBlock) {
+      return rightBlock;
     }
-    const searchResults = document.createElement('iframe');
-    searchResults.dataset.query = getGoogleQuery();
-    searchResults.style = 'width: 454px; height: 265px; border: none;';
-    searchResults.src = chrome.runtime.getURL('searchResults.html');
-    rightBlock.prepend(searchResults);
+
+    const searchPage = document.getElementById('rcnt');
+    const block = document.createElement('div');
+    block.id = 'rhs';
+    block.role = 'complementary';
+    searchPage.append(block);
+    return block;
   }
 
-  app();
+  function createResultsBlock() {
+    const frame = document.createElement('iframe');
+    frame.style = 'width: 454px; height: 265px; border: none;';
+    frame.src = chrome.runtime.getURL('searchResults.html');
+    return frame;
+  }
+
+  async function app() {
+    const rightBlock = findOrCreateBlock();
+    const resultsBlock = createResultsBlock();
+    rightBlock.prepend(resultsBlock);
+  }
+
+  return app();
 })();
