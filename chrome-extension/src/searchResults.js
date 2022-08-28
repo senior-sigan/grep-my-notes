@@ -1,18 +1,17 @@
 (async () => {
   function noteBlock(note) {
-    return `<a class="noteCard" target="_blank" href="${note.link}">
-      <h1 class="noteCardTitle">${note.title}</h1>
-      <p class="noteCardSnippet">${note.snippet}</p>
-    </a>`;
-  }
-
-  function asHtml(text) {
-    const lines = text.split('\n').filter((el) => el !== '');
-    return lines.join('<br>');
+    return `
+      <div class="note_block">
+        <a class="note_link" target="_blank" href="${note.link}">
+          <h3>${note.title}</h3>
+        </a>
+        <article class="note_body">${note.slug}</article>
+      </div>
+    `;
   }
 
   async function renderResults(results) {
-    const notesBlock = document.getElementById('notesCards');
+    const notesBlock = document.getElementById('notes-list');
     notesBlock.innerHTML = '';
 
     const data = await results.json();
@@ -26,7 +25,7 @@
         noteBlock({
           link: `vscode://file${entry.file}`,
           title: entry.title,
-          snippet: asHtml(entry.slug || ''),
+          slug: entry.slug,
         }),
       );
     });

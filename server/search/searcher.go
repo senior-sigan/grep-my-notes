@@ -1,6 +1,7 @@
 package search
 
 import (
+	"grepmynotes/markdown"
 	"log"
 	"os"
 	"path/filepath"
@@ -9,7 +10,8 @@ import (
 )
 
 type Searcher struct {
-	Path string
+	Path     string
+	markdown *markdown.Markdown
 }
 
 type Entry struct {
@@ -17,6 +19,13 @@ type Entry struct {
 	Count int    `json:"count"`
 	Slug  string `json:"slug"`
 	Title string `json:"title"`
+}
+
+func NewSearcher(path string) *Searcher {
+	return &Searcher{
+		Path:     path,
+		markdown: markdown.NewMarkdown(),
+	}
 }
 
 func IntMin(a, b int) int {
@@ -57,7 +66,8 @@ func ReadText(file string) (string, error) {
 		return "", err
 	}
 	text := string(data)
-	// TODO: remove frontmatter +++ ---
+
+	text = dropFrontmater(text)
 
 	return text, nil
 }
@@ -79,19 +89,6 @@ func dropFrontmater(text string) string {
 
 	text = strings.Join(lines[i+1:], "\n")
 	return text
-}
-
-func extractSlug(file string) string {
-	text, err := ReadText(file)
-	if err != nil {
-		log.Printf("[ERROR] extractSlug fail for %s: %v", file, err)
-		return ""
-	}
-
-	text = dropFrontmater(text)
-
-	runs := []rune(text)
-	return string(runs[0:IntMin(240, len(runs))])
 }
 
 func extractTitle(file string) string {
@@ -141,9 +138,12 @@ func (s *Searcher) Find(query string, limit int) []Entry {
 	results := make([]Entry, IntMin(limit, len(tuples)))
 	for i := range results {
 		log.Printf("%d %s\n", tuples[i].Count, tuples[i].File)
-
+		slug, err := s.markdown.Convert(tuples[i].File)
+		if err != nil {
+			log.Printf("[ERROR] %s: %v", tuples[i].File, err)
+		}
 		results[i] = tuples[i]
-		results[i].Slug = extractSlug(tuples[i].File)
+		results[i].Slug = slug
 		results[i].Title = extractTitle(tuples[i].File)
 	}
 

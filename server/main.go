@@ -28,9 +28,7 @@ func main() {
 	if filesPath, err := filepath.Abs(*srcFlag); err != nil {
 		log.Fatal(err)
 	} else {
-		searcher = &search.Searcher{
-			Path: filesPath,
-		}
+		searcher = search.NewSearcher(filesPath)
 	}
 
 	r := chi.NewRouter()
