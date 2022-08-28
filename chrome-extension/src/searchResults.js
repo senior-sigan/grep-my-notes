@@ -32,7 +32,7 @@
   }
 
   function renderError(error) {
-    const notesBlock = document.getElementById('notesCards');
+    const notesBlock = document.getElementById('notes-list');
     notesBlock.insertAdjacentHTML(
       'afterbegin',
       noteBlock({
@@ -52,11 +52,15 @@
     return params.get('q');
   }
 
-  const q = await getSearchQuery();
-  try {
-    const result = await fetch(`http://localhost:3000/?query=${q}`);
-    renderResults(result);
-  } catch (err) {
-    renderError(err);
+  async function runApp() {
+    const q = await getSearchQuery();
+    try {
+      const result = await fetch(`http://localhost:3000/?query=${q}`);
+      renderResults(result);
+    } catch (err) {
+      renderError(err);
+    }
   }
+
+  return runApp();
 })();
