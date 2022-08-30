@@ -1,13 +1,10 @@
-package main
+package server
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"grepmynotes/search"
-	"log"
 	"net/http"
-	"path/filepath"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -21,15 +18,8 @@ type SearchResponse struct {
 
 var searcher *search.Searcher
 
-func main() {
-	portFlag := flag.Int("port", 3000, "Server port to listen to")
-	srcFlag := flag.String("src", ".", "Path to the fodler with file")
-	flag.Parse()
-	if filesPath, err := filepath.Abs(*srcFlag); err != nil {
-		log.Fatal(err)
-	} else {
-		searcher = search.NewSearcher(filesPath)
-	}
+func Run(port int, filesPath string) error {
+	searcher = search.NewSearcher(filesPath)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -49,10 +39,8 @@ func main() {
 
 	r.Get("/", Search)
 
-	fmt.Printf("Listening to http://localhost:%d. Content dir is %s", *portFlag, searcher.Path)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", *portFlag), r); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Printf("Listening to http://localhost:%d. Content dir is %s", port, searcher.Path)
+	return http.ListenAndServe(fmt.Sprintf(":%d", port), r)
 }
 
 func Search(w http.ResponseWriter, r *http.Request) {

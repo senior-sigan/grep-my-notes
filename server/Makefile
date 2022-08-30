@@ -8,4 +8,4 @@ run:
 .PHONY: build
 build:
 	mkdir -p build/
-	GOROOT=${GOROOT} GOPATH=${GOPATH} go build -o build/server
+	GOROOT=${GOROOT} GOPATH=${GOPATH} go build -o build/server cli/cli.go
