@@ -1,4 +1,6 @@
 (async () => {
+  const PORT = 3333;
+
   function noteBlock(note) {
     return `
       <div class="note_block">
@@ -55,7 +57,7 @@
   async function runApp() {
     const q = await getSearchQuery();
     try {
-      const result = await fetch(`http://localhost:3000/?query=${q}`);
+      const result = await fetch(`http://localhost:${PORT}/?query=${q}`);
       renderResults(result);
     } catch (err) {
       renderError(err);
