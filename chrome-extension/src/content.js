@@ -17,7 +17,7 @@
     const frame = document.createElement('iframe');
     // TODO: calculate height!
     // TODO: fix width, horyzontal scroll on google page
-    frame.style = 'width: 450px; height: 100%; border: none;';
+    frame.style = 'width: 450px; height: 900px; border: none;';
     frame.src = chrome.runtime.getURL('searchResults.html');
     return frame;
   }

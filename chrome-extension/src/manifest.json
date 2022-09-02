@@ -15,7 +15,7 @@
   "content_scripts": [
     {
       "run_at": "document_idle",
-      "matches": ["https://*.google.com/*"],
+      "matches": ["https://www.google.com/*"],
       "js": ["content.js"]
     }
   ],
