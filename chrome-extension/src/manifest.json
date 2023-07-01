@@ -7,23 +7,45 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "assets/img/icon-16.png",
-      "24": "assets/img/icon-24.png",
-      "32": "assets/img/icon-32.png"
+      "16": "assets/img/icon.png",
+      "24": "assets/img/icon.png",
+      "32": "assets/img/icon.png"
     }
   },
   "content_scripts": [
     {
       "run_at": "document_idle",
-      "matches": ["https://www.google.com/*"],
-      "js": ["content.js"]
+      "matches": [
+        "https://www.google.com/*"
+      ],
+      "js": [
+        "content-google.js"
+      ]
+    },
+    {
+      "run_at": "document_idle",
+      "matches": [
+        "https://duckduckgo.com/*"
+      ],
+      "js": [
+        "content-duckduckgo.js"
+      ]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["searchResults.html", "searchResults.js", "searchResults.css"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "searchResults.html",
+        "searchResults.js",
+        "searchResults.css"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
-  "permissions": ["tabs", "activeTab"]
+  "permissions": [
+    "tabs",
+    "activeTab"
+  ]
 }
