@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"grepmynotes/search"
+	"log"
 	"net/http"
 	"time"
 
@@ -24,7 +25,7 @@ func Run(port int, filesPath string) error {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
+	// r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"chrome-extension://*"},
@@ -39,7 +40,7 @@ func Run(port int, filesPath string) error {
 
 	r.Get("/", Search)
 
-	fmt.Printf("Listening to http://localhost:%d. Content dir is %s", port, searcher.Path)
+	log.Printf("Listening to http://localhost:%d. Content dir is %s", port, searcher.Path)
 	return http.ListenAndServe(fmt.Sprintf(":%d", port), r)
 }
 

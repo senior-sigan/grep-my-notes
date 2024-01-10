@@ -136,8 +136,8 @@ func (s *Searcher) Find(query string, limit int) []Entry {
 	sort.Stable(SortByCount(tuples))
 
 	results := make([]Entry, IntMin(limit, len(tuples)))
+	log.Printf("[DEBUG] resultsCount=%d", len(results))
 	for i := range results {
-		log.Printf("%d %s\n", tuples[i].Count, tuples[i].File)
 		slug, err := s.markdown.Convert(tuples[i].File)
 		if err != nil {
 			log.Printf("[ERROR] %s: %v", tuples[i].File, err)
